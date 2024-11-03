@@ -111,82 +111,70 @@ const ClientePage = async ({ params }: ClientePageProps) => {
   const clienteData = processClientData(data);
 
   return (
-    <div className="flex flex-col items-center p-6">
-      <div className=" border-gray-300 rounded-lg shadow-lg p-6 w-full max-w-3xl">
+    <div className="flex flex-col items-center p-4 sm:p-6">
+      <div className="w-full max-w-3xl border-gray-300 rounded-lg shadow-lg p-4 sm:p-6">
         <div className="mb-10 w-full">
           <FuturaInfo />
         </div>
 
-        <div className="w-full max-w-xl">
-          <h2 className="text-2xl font-bold mb-4">Información del Cliente</h2>
-          <p>
+        <div className="w-full">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">
+            Información del Cliente
+          </h2>
+          <p className="text-base sm:text-lg">
             <strong>Oblea N°:</strong> {clienteData.obleaNumero}
           </p>
-          <p>
+          <p className="text-base sm:text-lg">
             <strong>Dirección:</strong> {clienteData.direccion}
           </p>
-          <p>
+          <p className="text-base sm:text-lg">
             <strong>Cliente:</strong> {clienteData.cliente}
           </p>
-          <p>
+          <p className="text-base sm:text-lg">
             <strong>Fecha de Servicio:</strong> {clienteData.fechaServicio}
           </p>
-          <p>
+          <p className="text-base sm:text-lg">
             <strong>Fecha de Vencimiento:</strong>{" "}
             {clienteData.fechaVencimiento}
           </p>
-          <p>
+          <p className="text-base sm:text-lg">
             <strong>Director Técnico:</strong> {clienteData.directorTecnico}
           </p>
-          <p>
+          <p className="text-base sm:text-lg">
             <strong>Matrícula:</strong> {clienteData.matricula}
           </p>
 
-          <h2 className="text-2xl font-bold mt-6 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold mt-6 mb-4">
             Información Adicional
           </h2>
-          <p>
+          <p className="text-base sm:text-lg">
             <strong>Personal Actuante:</strong> {clienteData.personalActuante}
           </p>
-          <p>
+          <p className="text-base sm:text-lg">
             <strong>CUIT:</strong> {clienteData.cuit}
           </p>
 
           <h2 className="text-2xl font-bold mt-6 mb-4">Productos Utilizados</h2>
-          {clienteData.productosUtilizados.length > 0 ? (
-            <table className="w-full table-auto border-collapse">
-              <thead>
-                <tr>
-                  <th className="border px-4 py-2">Denominación y Marca</th>
-                  <th className="border px-4 py-2">Registro ANMAT</th>
-                  <th className="border px-4 py-2">Composición</th>
-                  <th className="border px-4 py-2">Laboratorio</th>
-                  <th className="border px-4 py-2">
-                    Metodología de Aplicación
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {clienteData.productosUtilizados.map((producto, index) => (
-                  <tr key={index}>
-                    <td className="border px-4 py-2">
-                      {producto.denominacion}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {producto.registroAnmat}
-                    </td>
-                    <td className="border px-4 py-2">{producto.composicion}</td>
-                    <td className="border px-4 py-2">{producto.laboratorio}</td>
-                    <td className="border px-4 py-2">
-                      {producto.metodologiaAplicacion}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p>No hay productos registrados.</p>
-          )}
+          {clienteData.productosUtilizados.map((producto, index) => (
+            <div key={index} className="mb-4 p-4 border rounded-lg">
+              <p className="text-base sm:text-lg">
+                <strong>Denominación y Marca:</strong> {producto.denominacion}
+              </p>
+              <p className="text-base sm:text-lg">
+                <strong>Registro ANMAT:</strong> {producto.registroAnmat}
+              </p>
+              <p className="text-base sm:text-lg">
+                <strong>Composición:</strong> {producto.composicion}
+              </p>
+              <p className="text-base sm:text-lg">
+                <strong>Laboratorio:</strong> {producto.laboratorio}
+              </p>
+              <p className="text-base sm:text-lg">
+                <strong>Metodología de Aplicación:</strong>{" "}
+                {producto.metodologiaAplicacion}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
