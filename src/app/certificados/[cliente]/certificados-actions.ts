@@ -13,7 +13,7 @@ export async function fetchClientData(cliente: string): Promise<string[][]> {
   ]);
 
   const sheets = google.sheets({ version: "v4", auth });
-  const range = `${cliente}!A1:J17`;
+  const range = `${cliente}!A1:J18`;
 
   try {
     const response = await sheets.spreadsheets.values.get({

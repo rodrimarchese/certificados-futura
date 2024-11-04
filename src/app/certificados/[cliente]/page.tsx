@@ -8,6 +8,7 @@ interface ClienteData {
   cliente: string;
   fechaServicio: string;
   fechaVencimiento: string;
+  fechaProximoServicio: string;
   directorTecnico: string;
   matricula: string;
   personalActuante: string;
@@ -31,6 +32,7 @@ function processClientData(data: string[][]): ClienteData {
     cliente: "",
     fechaServicio: "",
     fechaVencimiento: "",
+    fechaProximoServicio: "",
     directorTecnico: "",
     matricula: "",
     personalActuante: "",
@@ -47,8 +49,9 @@ function processClientData(data: string[][]): ClienteData {
   clienteData.cliente = data[rowIndex++][1] || "";
   clienteData.fechaServicio = data[rowIndex++][1] || "";
   clienteData.fechaVencimiento = data[rowIndex++][1] || "";
-  clienteData.directorTecnico = data[rowIndex++][0] || "";
-  clienteData.matricula = data[rowIndex++][0] || "";
+  clienteData.fechaProximoServicio = data[rowIndex++][1] || "";
+  clienteData.directorTecnico = data[rowIndex++][1] || "";
+  clienteData.matricula = data[rowIndex++][1] || "";
 
   // Saltamos filas vacías si las hay
   while (
@@ -118,63 +121,77 @@ const ClientePage = async ({ params }: ClientePageProps) => {
         </div>
 
         <div className="w-full">
+          {/* make a box with important warning and showing fechaProximoServicio */}
+          <div className="bg-yellow-600 border-l-4 border-yellow-500 p-4 mb-4">
+            <p className="text-base sm:text-lg">
+              <strong>AVISO:</strong> El próximo servicio está programado para
+              el <strong>{clienteData.fechaProximoServicio}</strong>.
+            </p>
+          </div>
+
           <h2 className="text-xl sm:text-2xl font-bold mb-4">
             Información del Cliente
           </h2>
           <p className="text-base sm:text-lg">
-            <strong>Oblea N°:</strong> {clienteData.obleaNumero}
+            Oblea N°: <strong>{clienteData.obleaNumero}</strong>
           </p>
           <p className="text-base sm:text-lg">
-            <strong>Dirección:</strong> {clienteData.direccion}
+            Dirección: <strong>{clienteData.direccion}</strong>
           </p>
           <p className="text-base sm:text-lg">
-            <strong>Cliente:</strong> {clienteData.cliente}
+            Cliente: <strong>{clienteData.cliente}</strong>
           </p>
           <p className="text-base sm:text-lg">
-            <strong>Fecha de Servicio:</strong> {clienteData.fechaServicio}
+            Fecha de Servicio: <strong>{clienteData.fechaServicio}</strong>
           </p>
           <p className="text-base sm:text-lg">
-            <strong>Fecha de Vencimiento:</strong>{" "}
-            {clienteData.fechaVencimiento}
+            Fecha de Vencimiento:{" "}
+            <strong>{clienteData.fechaVencimiento}</strong>
           </p>
-          <p className="text-base sm:text-lg">
-            <strong>Director Técnico:</strong> {clienteData.directorTecnico}
-          </p>
-          <p className="text-base sm:text-lg">
-            <strong>Matrícula:</strong> {clienteData.matricula}
+          <p className="text-lg sm:text-xl mt-5">
+            Fecha de Próximo servicio:{" "}
+            <strong>{clienteData.fechaProximoServicio}</strong>
           </p>
 
           <h2 className="text-xl sm:text-2xl font-bold mt-6 mb-4">
             Información Adicional
           </h2>
           <p className="text-base sm:text-lg">
-            <strong>Personal Actuante:</strong> {clienteData.personalActuante}
+            Personal Actuante: <strong>{clienteData.personalActuante}</strong>
           </p>
           <p className="text-base sm:text-lg">
-            <strong>CUIT:</strong> {clienteData.cuit}
+            CUIT: <strong>{clienteData.cuit}</strong>
           </p>
 
           <h2 className="text-2xl font-bold mt-6 mb-4">Productos Utilizados</h2>
           {clienteData.productosUtilizados.map((producto, index) => (
             <div key={index} className="mb-4 p-4 border rounded-lg">
               <p className="text-base sm:text-lg">
-                <strong>Denominación y Marca:</strong> {producto.denominacion}
+                Denominación y Marca: <strong>{producto.denominacion}</strong>
               </p>
               <p className="text-base sm:text-lg">
-                <strong>Registro ANMAT:</strong> {producto.registroAnmat}
+                Registro ANMAT: <strong>{producto.registroAnmat}</strong>
               </p>
               <p className="text-base sm:text-lg">
-                <strong>Composición:</strong> {producto.composicion}
+                Composición: <strong>{producto.composicion}</strong>
               </p>
               <p className="text-base sm:text-lg">
-                <strong>Laboratorio:</strong> {producto.laboratorio}
+                Laboratorio: <strong>{producto.laboratorio}</strong>
               </p>
               <p className="text-base sm:text-lg">
-                <strong>Metodología de Aplicación:</strong>{" "}
-                {producto.metodologiaAplicacion}
+                Metodología de Aplicación:{" "}
+                <strong>{producto.metodologiaAplicacion}</strong>
               </p>
             </div>
           ))}
+
+          <h2 className="text-2xl font-bold mt-6 mb-4">Director Técnico</h2>
+          <p className="text-base sm:text-lg">
+            <strong>{clienteData.directorTecnico}</strong>
+          </p>
+          <p className="text-base sm:text-lg">
+            Matrícula: <strong>{clienteData.matricula}</strong>
+          </p>
         </div>
       </div>
     </div>

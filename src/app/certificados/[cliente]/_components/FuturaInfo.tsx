@@ -19,26 +19,26 @@ const FuturaInfo = async () => {
         {data.companyName}
       </h1>
       <div className="mt-4 sm:mt-6 w-full">
-        <div className=" border border-gray-300 rounded-lg shadow-md p-4">
+        <div className="border border-gray-300 rounded-lg shadow-md p-4">
           <p className="mb-2 sm:mb-4 text-base sm:text-lg">
-            {data.phoneNumbers}
+            Teléfonos: <strong>{data.phoneNumbers}</strong>
           </p>
           <p className="mb-2 sm:mb-4 text-base sm:text-lg">
-            <strong>Email:</strong> {data.email}
+            Email: <strong>{data.email}</strong>
           </p>
           <p className="mb-2 sm:mb-4 text-base sm:text-lg">
-            <strong>Sitio web:</strong> {data.website}
+            Sitio web: <strong>{data.website}</strong>
           </p>
           <p className="mb-2 sm:mb-4 text-base sm:text-lg">
-            <strong>Instagram:</strong> {data.instagram}
+            Instagram: <strong>{data.instagram}</strong>
           </p>
           <p className="mb-2 sm:mb-4 text-base sm:text-lg">
-            <strong>Registro Control de Plagas:</strong>{" "}
-            {data.pestControlRegistration}
+            Registro Control de Plagas:{" "}
+            <strong>{data.pestControlRegistration}</strong>
           </p>
           <p className="mb-2 sm:mb-4 text-base sm:text-lg">
-            <strong>Registro Limpieza de Tanques:</strong>{" "}
-            {data.tankCleaningRegistration}
+            Registro Limpieza de Tanques:{" "}
+            <strong>{data.tankCleaningRegistration}</strong>
           </p>
         </div>
       </div>
