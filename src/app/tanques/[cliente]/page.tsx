@@ -1,4 +1,5 @@
 import { PageProps } from "../../../../.next/types/app/layout";
+import Image from "next/image";
 import { fetchClientData } from "./tanques-actions";
 import FuturaInfo from "./_components/FuturaInfo";
 
@@ -188,9 +189,11 @@ const ClientePage = async ({ params }: ClientePageProps) => {
 
         {clienteData.logo && clienteData.logo !== "ninguno" && (
           <div className="w-full flex justify-center items-center my-5">
-            <img
+            <Image
               src={`/logos/${clienteData.logo}.webp`}
               alt="Logo"
+              width={256}
+              height={256}
               className="max-w-64 w-auto"
             />
           </div>
