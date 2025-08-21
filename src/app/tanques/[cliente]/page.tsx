@@ -79,8 +79,6 @@ function processClientData(data: string[][]): ClienteData {
   // Fila 10: Personal Actuante y Fila 11: CUIT (los relacionamos por columna)
   if (data[9] && data[10]) {
     clienteData.personalYcuit = [];
-    console.log("Fila 10 (Personal Actuante):", data[9]);
-    console.log("Fila 11 (CUIT):", data[10]);
 
     // Leemos desde la columna B (índice 1) para ambas filas
     for (let i = 1; i < Math.max(data[9].length, data[10].length); i++) {
@@ -95,7 +93,6 @@ function processClientData(data: string[][]): ClienteData {
         });
       }
     }
-    console.log("Personal y CUIT encontrados:", clienteData.personalYcuit);
   }
   // Fila 20: Logo
   clienteData.logo = data[19]?.[1] || "";
@@ -181,8 +178,6 @@ const ClientePage = async ({ params }: ClientePageProps) => {
 
   // Procesamos los datos
   const clienteData = processClientData(data);
-
-  console.log(clienteData);
 
   return (
     <div className="flex flex-col items-center p-4 sm:p-6">
