@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const SPREADSHEET_ID = process.env.CERTIFICADOS_SPREADSHEET_ID || "";
+const SPREADSHEET_ID = process.env.TANQUES_SPREADSHEET_ID || "";
 const CLIENT_EMAIL = process.env.CLIENT_EMAIL || "";
 const PRIVATE_KEY = (process.env.PRIVATE_KEY || "").replace(/\\n/g, "\n");
 
@@ -13,7 +13,7 @@ export async function fetchClientData(cliente: string): Promise<string[][]> {
   ]);
 
   const sheets = google.sheets({ version: "v4", auth });
-  const range = `${cliente}!A1:J20`;
+  const range = `${cliente}!A1:J25`;
 
   try {
     const response = await sheets.spreadsheets.values.get({

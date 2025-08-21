@@ -1,6 +1,11 @@
 import { PageProps } from "../../../../.next/types/app/layout";
+import { fetchClientData } from "./tanques-actions";
 import FuturaInfo from "./_components/FuturaInfo";
-import { fetchClientData } from "./certificados-actions";
+
+interface PersonalCuit {
+  personal: string;
+  cuit: string;
+}
 
 interface ClienteData {
   obleaNumero: string;
@@ -13,10 +18,13 @@ interface ClienteData {
   fechasServiciosPasados: string[];
   directorTecnico: string;
   matricula: string;
-  personalActuante: string;
-  cuit: string;
+  personalYcuit: PersonalCuit[];
   productosUtilizados: Producto[];
   logo: string;
+  informeTanques: string;
+  resultadosBacteriologicos: string;
+  sospechaAsbesto: string;
+  observaciones: string;
 }
 
 interface Producto {
@@ -40,10 +48,13 @@ function processClientData(data: string[][]): ClienteData {
     fechasServiciosPasados: [],
     directorTecnico: "",
     matricula: "",
-    personalActuante: "",
-    cuit: "",
+    personalYcuit: [],
     logo: "",
     productosUtilizados: [],
+    informeTanques: "",
+    resultadosBacteriologicos: "",
+    sospechaAsbesto: "",
+    observaciones: "",
   };
 
   // Usamos índices de fila específicos (las filas en Excel empiezan en 1, pero los arrays en 0)
@@ -65,12 +76,41 @@ function processClientData(data: string[][]): ClienteData {
   clienteData.directorTecnico = data[6]?.[1] || "";
   // Fila 8: Matrícula
   clienteData.matricula = data[7]?.[1] || "";
-  // Fila 9: Personal Actuante
-  clienteData.personalActuante = data[9]?.[1] || "";
-  // Fila 10: CUIT
-  clienteData.cuit = data[10]?.[1] || "";
+  // Fila 10: Personal Actuante y Fila 11: CUIT (los relacionamos por columna)
+  if (data[9] && data[10]) {
+    clienteData.personalYcuit = [];
+    console.log("Fila 10 (Personal Actuante):", data[9]);
+    console.log("Fila 11 (CUIT):", data[10]);
+
+    // Leemos desde la columna B (índice 1) para ambas filas
+    for (let i = 1; i < Math.max(data[9].length, data[10].length); i++) {
+      const personal = data[9][i]?.trim() || "";
+      const cuit = data[10][i]?.trim() || "";
+
+      // Solo agregamos si hay personal (el CUIT puede estar vacío)
+      if (personal !== "") {
+        clienteData.personalYcuit.push({
+          personal: personal,
+          cuit: cuit,
+        });
+      }
+    }
+    console.log("Personal y CUIT encontrados:", clienteData.personalYcuit);
+  }
   // Fila 20: Logo
   clienteData.logo = data[19]?.[1] || "";
+
+  // Fila 21: Informe del estado de los tanques
+  clienteData.informeTanques = data[20]?.[1] || "";
+
+  // Fila 22: Resultados de ensayos bacteriológicos
+  clienteData.resultadosBacteriologicos = data[21]?.[1] || "";
+
+  // Fila 23: Sospecha de asbesto
+  clienteData.sospechaAsbesto = data[22]?.[1] || "";
+
+  // Fila 24: Observaciones
+  clienteData.observaciones = data[23]?.[1] || "";
 
   // Fila 19: Fechas de servicios pasados (columnas B, C, D)
   if (data[18] && data[18][0]?.trim() === "Fechas de servicios pasados") {
@@ -142,6 +182,8 @@ const ClientePage = async ({ params }: ClientePageProps) => {
   // Procesamos los datos
   const clienteData = processClientData(data);
 
+  console.log(clienteData);
+
   return (
     <div className="flex flex-col items-center p-4 sm:p-6">
       <div className="w-full max-w-3xl border-gray-300 rounded-lg shadow-lg p-4 sm:p-6">
@@ -194,60 +236,133 @@ const ClientePage = async ({ params }: ClientePageProps) => {
             <strong>{clienteData.horaProximoServicio} hs</strong>
           </p>
 
-          <h2 className="text-xl sm:text-2xl font-bold mt-6 mb-4">
-            Información Adicional
-          </h2>
-          <p className="text-base sm:text-lg">
-            Personal Actuante: <strong>{clienteData.personalActuante}</strong>
-          </p>
-          <p className="text-base sm:text-lg">
-            CUIT: <strong>{clienteData.cuit}</strong>
-          </p>
+          <h2 className="text-xl sm:text-2xl font-bold mt-6 mb-4">Detalles</h2>
 
-          <h2 className="text-2xl font-bold mt-6 mb-4">Productos Utilizados</h2>
-          {clienteData.productosUtilizados.map((producto, index) => (
-            <div key={index} className="mb-4 p-4 border rounded-lg">
-              <p className="text-base sm:text-lg">
-                Denominación y Marca: <strong>{producto.denominacion}</strong>
+          <div className="w-full mb-6">
+            {/* Informe del estado de los tanques */}
+            {clienteData.informeTanques && (
+              <div className="mb-4">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">
+                  Informe del estado de los tanques:
+                </h3>
+                <p className="text-base sm:text-lg">
+                  {clienteData.informeTanques}
+                </p>
+              </div>
+            )}
+
+            {/* Resultados de ensayos bacteriológicos */}
+            {clienteData.resultadosBacteriologicos && (
+              <div className="mb-4">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">
+                  Resultados de ensayos bacteriológicos:
+                </h3>
+                <p className="text-base sm:text-lg">
+                  {clienteData.resultadosBacteriologicos}
+                </p>
+              </div>
+            )}
+
+            {/* Sospecha de asbesto - solo aparece si hay contenido */}
+            {clienteData.sospechaAsbesto && (
+              <div className="mb-4">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">
+                  Sospecha de asbesto:
+                </h3>
+                <p className="text-base sm:text-lg">
+                  {clienteData.sospechaAsbesto}
+                </p>
+              </div>
+            )}
+
+            <h2 className="text-xl sm:text-2xl font-bold mt-6 mb-4">
+              Información Adicional
+            </h2>
+
+            {/* Personal Actuante y CUIT juntos */}
+            <div className="mb-4">
+              <p className="text-base sm:text-lg font-semibold mb-3">
+                Personal Actuante y CUIT:
               </p>
-              <p className="text-base sm:text-lg">
-                Registro ANMAT: <strong>{producto.registroAnmat}</strong>
-              </p>
-              <p className="text-base sm:text-lg">
-                Composición: <strong>{producto.composicion}</strong>
-              </p>
-              <p className="text-base sm:text-lg">
-                Laboratorio: <strong>{producto.laboratorio}</strong>
-              </p>
-              <p className="text-base sm:text-lg">
-                Metodología de Aplicación:{" "}
-                <strong>{producto.metodologiaAplicacion}</strong>
-              </p>
+              {clienteData.personalYcuit.length > 0 ? (
+                <div>
+                  {clienteData.personalYcuit.map((item, index) => (
+                    <p key={index} className="text-base sm:text-lg mb-2">
+                      <strong>{item.personal}</strong>
+                      {item.cuit && ` - CUIT: ${item.cuit}`}
+                    </p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-base sm:text-lg text-gray-500">
+                  No especificado
+                </p>
+              )}
             </div>
-          ))}
 
-          <h2 className="text-2xl font-bold mt-6 mb-4">Director Técnico</h2>
-          <p className="text-base sm:text-lg">
-            <strong>{clienteData.directorTecnico}</strong>
-          </p>
-          <p className="text-base sm:text-lg">
-            Matrícula: <strong>{clienteData.matricula}</strong>
-          </p>
+            <h2 className="text-2xl font-bold mt-6 mb-4">
+              Productos Utilizados
+            </h2>
+            {clienteData.productosUtilizados.map((producto, index) => (
+              <div key={index} className="mb-4 p-4 border rounded-lg">
+                <p className="text-base sm:text-lg">
+                  Denominación y Marca: <strong>{producto.denominacion}</strong>
+                </p>
+                <p className="text-base sm:text-lg">
+                  Registro ANMAT: <strong>{producto.registroAnmat}</strong>
+                </p>
+                <p className="text-base sm:text-lg">
+                  Composición: <strong>{producto.composicion}</strong>
+                </p>
+                <p className="text-base sm:text-lg">
+                  Laboratorio: <strong>{producto.laboratorio}</strong>
+                </p>
+                <p className="text-base sm:text-lg">
+                  Metodología de Aplicación:{" "}
+                  <strong>{producto.metodologiaAplicacion}</strong>
+                </p>
+              </div>
+            ))}
 
-          {clienteData.fechasServiciosPasados.length > 0 && (
-            <div className="mt-5">
-              <h3 className="text-lg sm:text-xl font-semibold mb-3">
-                Fechas de Servicios Pasados:
-              </h3>
-              <ul className="list-disc list-inside">
-                {clienteData.fechasServiciosPasados.map((fecha, index) => (
-                  <li key={index} className="text-base sm:text-lg mb-2">
-                    <strong>{fecha}</strong>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+            <h2 className="text-2xl font-bold mt-6 mb-4">Director Técnico</h2>
+            <p className="text-base sm:text-lg">
+              <strong>{clienteData.directorTecnico}</strong>
+            </p>
+            <p className="text-base sm:text-lg">
+              Matrícula: <strong>{clienteData.matricula}</strong>
+            </p>
+
+            {clienteData.fechasServiciosPasados.length > 0 && (
+              <div className="mt-5">
+                <h3 className="text-lg sm:text-xl font-semibold mb-3">
+                  Fechas de Servicios Pasados:
+                </h3>
+                <ul className="list-disc list-inside">
+                  {clienteData.fechasServiciosPasados.map(
+                    (fecha, index) =>
+                      fecha &&
+                      fecha !== "" && (
+                        <li key={index} className="text-base sm:text-lg mb-2">
+                          <strong>{fecha}</strong>
+                        </li>
+                      )
+                  )}
+                </ul>
+              </div>
+            )}
+
+            {/* Observaciones */}
+            {clienteData.observaciones && (
+              <div className="mb-4">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">
+                  Observaciones:
+                </h3>
+                <p className="text-base sm:text-lg">
+                  {clienteData.observaciones}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
