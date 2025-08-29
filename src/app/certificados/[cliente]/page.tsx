@@ -146,7 +146,7 @@ const ClientePage = async ({ params }: ClientePageProps) => {
   return (
     <div className="flex flex-col items-center p-4 sm:p-6">
       <div className="w-full max-w-3xl border-gray-300 rounded-lg shadow-lg p-4 sm:p-6">
-        <div className="mb-10 w-full">
+        <div className="mb-4 w-full">
           <FuturaInfo />
         </div>
 
