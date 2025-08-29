@@ -28,7 +28,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="min-h-screen flex flex-col">
+          <main className="flex-1">{children}</main>
+          <footer className="w-full py-4 text-center text-sm text-gray-500">
+            © {new Date().getFullYear()} Futura — Todos los derechos reservados.{" "}
+            <a
+              href="https://ltmsoftware.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-gray-600"
+            >
+              Powered by LTM Software
+            </a>
+          </footer>
+        </div>
       </body>
     </html>
   );
