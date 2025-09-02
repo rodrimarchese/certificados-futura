@@ -73,13 +73,30 @@ function processClientData(data: string[][]): ClienteData {
   // Fila 20: Logo
   clienteData.logo = data[19]?.[1] || "";
 
-  // Fila 19: Fechas de servicios pasados (columnas B, C, D)
+  // Fila 19: Fechas de servicios pasados (columnas B, C, D, etc.)
   if (data[18] && data[18][0]?.trim() === "Fechas de servicios pasados") {
-    clienteData.fechasServiciosPasados = [
+    const fechas = [
       data[18][1] || "", // Columna B
       data[18][2] || "", // Columna C
       data[18][3] || "", // Columna D
+      data[18][4] || "", // Columna E
+      data[18][5] || "", // Columna F
+      data[18][6] || "", // Columna G
+      data[18][7] || "", // Columna H
+      data[18][8] || "", // Columna I
+      data[18][9] || "", // Columna J
+      data[18][10] || "", // Columna K
+      data[18][11] || "", // Columna L
+      data[18][12] || "", // Columna M
+      data[18][13] || "", // Columna N
+      data[18][14] || "", // Columna O
+      data[18][15] || "", // Columna P
     ];
+
+    // Solo guardamos las fechas que no estén vacías
+    clienteData.fechasServiciosPasados = fechas.filter(
+      (fecha) => fecha.trim() !== ""
+    );
   }
 
   // Buscamos la fila de "Productos Utilizados" (puede estar en diferentes posiciones)
